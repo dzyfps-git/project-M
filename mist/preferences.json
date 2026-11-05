@@ -55,20 +55,14 @@
     "defaultValue": false
   },
   {
-    "property": "mod.mist.favicon_glow",
-    "label": "Favicon glow (experimental): the active tab's icon glows in its own colors",
-    "type": "checkbox",
-    "defaultValue": false
-  },
-  {
     "property": "mod.mist.flat_page",
     "label": "Flat page: remove the floating shadow around websites",
     "type": "checkbox",
     "defaultValue": false
   },
   {
-    "property": "mod.mist.no_glow",
-    "label": "Turn off the accent glows",
+    "property": "mod.mist.still_tab",
+    "label": "Keep the active tab's gradient still (no slow drift, only the rush when you switch)",
     "type": "checkbox",
     "defaultValue": false
   },

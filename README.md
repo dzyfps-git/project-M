@@ -6,9 +6,11 @@ small, smooth animations. Nothing loud, nothing in the way.
 
 ## What it does
 
-- **Active tab as a soft card.** The selected tab gets a gradient wash, a
-  violet-to-blue edge and a two-tone glow (violet on the left, blue on the
-  right). A soft band of light sweeps across it once as it becomes active.
+- **A living active tab.** The selected tab is a soft card with a
+  violet-to-blue gradient that slowly drifts through it. When you switch to a
+  tab, the gradient lights up and rushes through it, then settles back into
+  the drift. There's no glow or colored outline, just a hairline and a soft
+  shadow.
 - **Tabs that react.** Hovering a tab tints it faintly violet, and while a page
   loads, a gentle shimmer loops across its tab.
 - **Quieter tab list.** Background tabs' titles are slightly dimmed. Favicons
@@ -19,17 +21,18 @@ small, smooth animations. Nothing loud, nothing in the way.
   menu is in the sidebar.
 - **Floating page.** The website area gets a hairline edge and a softer,
   layered shadow.
-- **URL bar bloom.** The floating URL bar fades in with a gentle spring and a
-  violet/blue glow, and the results slide down a few pixels.
+- **URL bar bloom.** The floating URL bar fades in with a gentle spring, and
+  the results slide down a few pixels.
 - **Essentials.** The tiles lift slightly on hover, and the active one gets the
-  gradient ring and glow.
+  same flowing gradient as the active tab.
+- **Media player.** The player card carries the gradient too. It flows while
+  something plays and freezes when you pause, and the color drains out when
+  muted. Play/pause is a round gradient button, the progress bar fills with
+  the gradient and thickens under the pointer, and every control gets a round
+  hover background and a springy press.
 - **Folders that read as groups.** An open folder (Zen's tab groups) sits on a
   faint violet-tinted tray, and folder rows match the tab style.
 - **Favicon pop.** When a tab becomes active, its icon does a tiny spring pop.
-- **Favicon glow (experimental, off by default).** The active tab's icon glows
-  in its own colors, multi-color icons included. CSS can't read an icon's
-  color, so this uses an SVG filter that blurs a copy of the icon behind
-  itself.
 - **Hidden space name.** The space name at the top of the tab list is hidden by
   default for a cleaner sidebar. You can still switch spaces with the icons at
   the bottom, swipes or shortcuts.
@@ -90,9 +93,8 @@ name, choose **Boolean**, and click **+**:
 | `mod.mist.hide_space_name` | Hide the space name at the top of the tab list | on |
 | `mod.mist.compact_tabs` | Shorter tab rows | off |
 | `mod.mist.hide_close` | Hide tab close buttons (middle-click or Ctrl/Cmd+W still work) | off |
-| `mod.mist.favicon_glow` | The active tab's icon glows in its own colors (experimental) | off |
 | `mod.mist.flat_page` | Remove the floating shadow around websites | off |
-| `mod.mist.no_glow` | Turn off the accent glows | off |
+| `mod.mist.still_tab` | Keep the active tab's gradient still (only the rush when you switch) | off |
 | `mod.mist.no_motion` | Turn off Mist's animations | off |
 
 With a hand install, every pref starts **off** until you create it. So if you
@@ -173,6 +175,6 @@ system and animations it hooks into were all checked there). It has **not
 yet been run inside a live Zen window**. If anything looks off, inspect it with
 the Browser Toolbox, or open an issue with a screenshot.
 
-The favicon glow is the most experimental part. It relies on Firefox loading an
-SVG filter from a `data:` URL, which couldn't be confirmed without a running
-Zen. If icons look wrong or disappear with it on, turn it back off.
+The active tab's slow drift is a small, continuous animation. If you'd rather
+have no ongoing motion, turn on "Keep the active tab's gradient still"; the
+rush when you switch tabs stays.
