@@ -27,9 +27,10 @@
   --mist-radius-sm: calc(var(--mist-radius) * 0.5);
 
   /* Motion */
-  --mist-fast: 140ms;
-  --mist-base: 260ms;
-  --mist-slow: 420ms;
+  --mist-fast: 90ms;
+  --mist-base: 160ms;
+  --mist-slow: 280ms;
+  --mist-sheen-time: 700ms;
   --mist-ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* A gentle spring with about 2% overshoot. */
   --mist-spring: linear(
@@ -64,10 +65,30 @@
     color-mix(in srgb, var(--mist-a) 7%, rgb(255 255 255 / 0.025))
   );
   /* Two-tone glow: violet on the left, blue on the right. */
-  --mist-glow-a: color-mix(in srgb, var(--mist-a) 42%, transparent);
-  --mist-glow-b: color-mix(in srgb, var(--mist-b) 42%, transparent);
+  --mist-glow-a: color-mix(in srgb, var(--mist-a) 55%, transparent);
+  --mist-glow-b: color-mix(in srgb, var(--mist-b) 55%, transparent);
+  /* Edge colours for the active tab: violet on the left, blue on the right,
+     a blend of both along the top and bottom. Together they read as a
+     gradient border without touching the tab's layout. */
+  --mist-edge-a: color-mix(in srgb, var(--mist-a) 70%, transparent);
+  --mist-edge-b: color-mix(in srgb, var(--mist-b) 70%, transparent);
+  --mist-edge-mid: color-mix(in srgb, var(--mist-accent) 45%, transparent);
+  /* A soft band of light used for the selection sweep and loading shimmer. */
+  --mist-sheen: linear-gradient(
+    100deg,
+    transparent 42%,
+    light-dark(
+      color-mix(in srgb, var(--mist-b) 30%, rgb(255 255 255 / 0.6)),
+      color-mix(in srgb, var(--mist-b) 22%, rgb(255 255 255 / 0.14))
+    ) 50%,
+    transparent 58%
+  );
+  /* Hover: a faint violet tint instead of plain grey. */
+  --mist-hover-tint: light-dark(
+    color-mix(in srgb, var(--mist-a) 13%, rgb(0 0 0 / 0.02)),
+    color-mix(in srgb, var(--mist-a) 14%, rgb(255 255 255 / 0.04))
+  );
 
-  --mist-hover: color-mix(in srgb, currentColor 7%, transparent);
   --mist-press: color-mix(in srgb, currentColor 12%, transparent);
   --mist-hairline: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.08));
   --mist-surface: light-dark(rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.1));
@@ -100,6 +121,8 @@
     --mist-fast: 0s;
     --mist-base: 0s;
     --mist-slow: 0s;
+    --mist-sheen-time: 0s;
+    --mist-sheen: none;
   }
 }
 
@@ -125,19 +148,42 @@
   }
 
   &:hover:not([selected], [multiselected]) > .tab-stack > .tab-background {
-    background-color: var(--mist-hover) !important;
+    background-color: var(--mist-hover-tint) !important;
   }
 
-  /* The active tab is a soft, raised card: a faint gradient wash, an
-     accent-tinted edge and a violet-to-blue glow underneath. */
+  /* The active tab is a soft, raised card: a gradient wash, a violet-to-
+     blue edge and a two-tone glow underneath. The first background layer
+     is the sheen used by the sweep below; it rests just off the right edge. */
   &:is([selected], [multiselected]) > .tab-stack > .tab-background {
     background-color: var(--mist-surface) !important;
-    background-image: var(--mist-wash) !important;
+    background-image: var(--mist-sheen), var(--mist-wash) !important;
+    background-size: 250% 100%, 100% 100% !important;
+    background-repeat: no-repeat !important;
+    background-position: 0% 0, 0 0;
     box-shadow:
-      inset 0 0 0 1px var(--mist-ring),
+      inset 1px 0 0 0 var(--mist-edge-a),
+      inset -1px 0 0 0 var(--mist-edge-b),
+      inset 0 1px 0 0 var(--mist-edge-mid),
+      inset 0 -1px 0 0 var(--mist-edge-mid),
       0 1px 2px var(--mist-shadow-soft),
-      -5px 6px 16px -9px var(--mist-glow-a),
-      5px 6px 16px -9px var(--mist-glow-b) !important;
+      -6px 5px 16px -8px var(--mist-glow-a),
+      6px 5px 16px -8px var(--mist-glow-b) !important;
+  }
+
+  /* A soft band of light sweeps across a tab once as it becomes active. */
+  &[selected] > .tab-stack > .tab-background {
+    animation: mist-sheen var(--mist-sheen-time) var(--mist-ease) !important;
+  }
+
+  /* While a page loads, the same light loops across its tab. */
+  &[busy] > .tab-stack > .tab-background {
+    background-image: var(--mist-sheen), var(--mist-wash) !important;
+    background-size: 250% 100%, 100% 100% !important;
+    background-repeat: no-repeat !important;
+    animation: mist-sheen calc(var(--mist-sheen-time) * 1.8) ease-in-out infinite !important;
+  }
+  &[busy]:not([selected], [multiselected]) > .tab-stack > .tab-background {
+    background-image: var(--mist-sheen) !important;
   }
 
   /* Favicon gets a small spring pop on hover. */
@@ -197,6 +243,17 @@
   }
 }
 
+/* Only the first layer (the sheen) moves: from just off the left edge to
+   just off the right. The wash layer stays put. */
+@keyframes mist-sheen {
+  from {
+    background-position: 100% 0, 0 0;
+  }
+  to {
+    background-position: 0% 0, 0 0;
+  }
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    3. Favicons: a little pop when a tab becomes active, plus an optional
    glow in the icon's own colours
@@ -219,7 +276,7 @@
    takes the icon's own colours, multi-colour icons included. */
 @media -moz-pref("mod.mist.favicon_glow") {
   :root {
-    --mist-favicon-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g' x='-100%25' y='-100%25' width='300%25' height='300%25' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='3.5' result='b'/%3E%3CfeColorMatrix in='b' type='saturate' values='1.7' result='s'/%3E%3CfeComponentTransfer in='s' result='f'%3E%3CfeFuncA type='linear' slope='0.7'/%3E%3C/feComponentTransfer%3E%3CfeMerge%3E%3CfeMergeNode in='f'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/svg%3E#g");
+    --mist-favicon-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g' x='-250%25' y='-250%25' width='600%25' height='600%25' color-interpolation-filters='sRGB'%3E%3CfeColorMatrix in='SourceGraphic' type='saturate' values='1.8' result='s'/%3E%3CfeGaussianBlur in='s' stdDeviation='9' result='far'/%3E%3CfeComponentTransfer in='far' result='farA'%3E%3CfeFuncA type='linear' slope='1.6'/%3E%3C/feComponentTransfer%3E%3CfeGaussianBlur in='s' stdDeviation='2.5' result='near'/%3E%3CfeComponentTransfer in='near' result='nearA'%3E%3CfeFuncA type='linear' slope='0.8'/%3E%3C/feComponentTransfer%3E%3CfeMerge%3E%3CfeMergeNode in='farA'/%3E%3CfeMergeNode in='nearA'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/svg%3E#g");
   }
 
   .tabbrowser-tab:not([zen-glance-tab]):is([selected], [zen-essential]:hover)
@@ -346,23 +403,6 @@ zen-folder > .tab-group-label-container::before {
   }
 }
 
-/* When you switch tabs the new page settles in with a short fade.
-   Split view and Glance overlays have their own motion, so they are
-   skipped. Kept deliberately subtle: Zen also toggles these classes in a
-   few edge cases (e.g. expanding a Glance preview), where a big fade
-   would look like a flicker. */
-#tabbrowser-tabpanels:not([zen-split-view="true"])
-  > .browserSidebarContainer.deck-selected:not(.zen-glance-overlay) {
-  animation: mist-page-in var(--mist-slow) var(--mist-ease) !important;
-}
-
-@keyframes mist-page-in {
-  from {
-    opacity: 0.65;
-    scale: 0.993;
-  }
-}
-
 /* ════════════════════════════════════════════════════════════════════════
    8. URL bar
    ════════════════════════════════════════════════════════════════════════ */
@@ -389,7 +429,7 @@ zen-folder > .tab-group-label-container::before {
 
 /* Results slide down a few pixels just after the bar opens. */
 #urlbar[open] .urlbarView {
-  animation: mist-results-in var(--mist-base) var(--mist-ease) 40ms backwards !important;
+  animation: mist-results-in var(--mist-base) var(--mist-ease) !important;
 }
 
 :is(.urlbarView-row, .urlbarView-row-inner) {

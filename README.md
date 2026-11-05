@@ -6,9 +6,11 @@ small, smooth animations. Nothing loud, nothing in the way.
 
 ## What it does
 
-- **Active tab as a soft card.** The selected tab gets a faint gradient wash,
-  an accent-tinted edge and a two-tone glow (violet on the left, blue on the
-  right).
+- **Active tab as a soft card.** The selected tab gets a gradient wash, a
+  violet-to-blue edge and a two-tone glow (violet on the left, blue on the
+  right). A soft band of light sweeps across it once as it becomes active.
+- **Tabs that react.** Hovering a tab tints it faintly violet, and while a page
+  loads, a gentle shimmer loops across its tab.
 - **Quieter tab list.** Background tabs' titles are slightly dimmed. Favicons
   do a tiny spring "pop" on hover. Close buttons fade and spring in instead of
   appearing abruptly.
@@ -17,7 +19,6 @@ small, smooth animations. Nothing loud, nothing in the way.
   menu is in the sidebar.
 - **Floating page.** The website area gets a hairline edge and a softer,
   layered shadow.
-- **Smooth tab switching.** The new page settles in with a short, subtle fade.
 - **URL bar bloom.** The floating URL bar fades in with a gentle spring and a
   violet/blue glow, and the results slide down a few pixels.
 - **Essentials.** The tiles lift slightly on hover, and the active one gets the

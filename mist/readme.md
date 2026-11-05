@@ -3,13 +3,14 @@
 A calm, clean theme for Zen. It uses a soft violet-to-light-blue gradient,
 quieter chrome and small, smooth animations.
 
-- The active tab is a soft card with a faint gradient wash and a two-tone glow.
+- The active tab is a soft card with a gradient wash, a violet-to-blue edge and
+  a two-tone glow, and a band of light sweeps across it when you switch to it.
+- Hovered tabs get a faint violet tint, and loading tabs shimmer.
 - Background tab titles are slightly dimmed, favicons pop gently on hover, and
   close buttons spring in.
 - Quiet sidebar: the bottom buttons and New Tab row appear when you hover the
   sidebar.
 - Websites float on a hairline-edged card with a soft, layered shadow.
-- Pages fade in subtly when you switch tabs.
 - The floating URL bar blooms in with a glow, and its results slide into place.
 - Essentials tiles lift slightly on hover.
 - Open folders sit on a faint tinted tray, so grouped tabs read as one group.
