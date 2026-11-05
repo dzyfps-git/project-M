@@ -6,8 +6,8 @@ pages and icons bring the color.
 
 - The active tab is a pane of frosted glass. A soft wave of light glides
   across it when you switch to it.
-- Playing tabs show a tiny equalizer on their favicon. Hover it and it becomes
-  a mute/unmute button. Muted tabs show flat bars.
+- Playing tabs swap their favicon for four bouncing bars. Hover them and they
+  become a mute/unmute button. Muted tabs show their favicon, dimmed.
 - Background tab titles are slightly dimmed, favicons pop gently, close buttons
   spring in, and loading tabs shimmer.
 - Quiet sidebar: the bottom buttons and New Tab row appear when you hover the

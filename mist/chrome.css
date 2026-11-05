@@ -280,10 +280,10 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   3. Sound on tabs: the favicon is the mute button
-   Instead of Zen's separate speaker button, a playing tab shows a tiny
-   equalizer on its favicon. Hover the favicon and it turns into a mute /
-   unmute button; click it to toggle. Muted tabs show flat bars.
+   3. Sound on tabs: the favicon becomes a visualizer
+   Instead of Zen's separate speaker button, a playing tab swaps its
+   favicon for four bouncing bars. Hover them and they turn into a mute /
+   unmute button; click to toggle. Muted tabs show their favicon, dimmed.
    (This is Firefox's own favicon sound badge, restyled, so the click
    behaviour is Firefox's.)
    ════════════════════════════════════════════════════════════════════════ */
@@ -295,6 +295,10 @@
       display: none !important;
     }
 
+    & .tab-icon-image {
+      transition: opacity var(--mist-base) var(--mist-ease) !important;
+    }
+
     & .tab-icon-overlay:not([crashed]) {
       display: block !important;
       position: relative !important;
@@ -303,51 +307,57 @@
       width: 16px !important;
       height: 16px !important;
       padding: 2px !important;
-      border-radius: 5px !important;
+      border-radius: 50% !important;
       background-color: transparent !important;
+      background-image: none !important;
       /* The speaker glyph only shows on hover. */
       fill: transparent !important;
       stroke: transparent !important;
       transition: background-color var(--mist-fast) var(--mist-ease) !important;
-      /* Three bars on a small dark chip in the favicon's corner. */
-      background-image:
-        linear-gradient(#fff, #fff),
-        linear-gradient(#fff, #fff),
-        linear-gradient(#fff, #fff),
-        radial-gradient(circle at 11.5px 11.5px, rgb(0 0 0 / 0.62) 0 4.5px, transparent 5px) !important;
-      background-repeat: no-repeat !important;
-      background-position:
-        left 8.75px bottom 2px,
-        left 10.85px bottom 2px,
-        left 12.95px bottom 2px,
-        0 0 !important;
-      /* Not !important: the equalizer animates this. */
-      background-size:
-        1.3px 2px,
-        1.3px 5px,
-        1.3px 3px,
-        100% 100%;
     }
 
-    &[soundplaying]:not([muted]) .tab-icon-overlay:not([crashed]) {
-      animation: mist-eq var(--mist-eq-time) ease-in-out infinite !important;
+    /* Playing: four bars in the tab's text colour, growing from the
+       centre, replace the favicon. */
+    &[soundplaying]:not([muted]) {
+      & .tab-icon-image {
+        opacity: 0 !important;
+      }
+      & .tab-icon-overlay:not([crashed]) {
+        background-image:
+          linear-gradient(currentColor, currentColor),
+          linear-gradient(currentColor, currentColor),
+          linear-gradient(currentColor, currentColor),
+          linear-gradient(currentColor, currentColor) !important;
+        background-repeat: no-repeat !important;
+        background-position:
+          left 1.6px center,
+          left 5.2px center,
+          left 8.8px center,
+          left 12.4px center !important;
+        /* Not !important: the bars animate this. */
+        background-size:
+          2px 6px,
+          2px 12px,
+          2px 9px,
+          2px 5px;
+        animation: mist-eq var(--mist-eq-time) ease-in-out infinite !important;
+      }
     }
 
-    &[muted] .tab-icon-overlay:not([crashed]) {
-      background-size:
-        1.3px 1.2px,
-        1.3px 1.2px,
-        1.3px 1.2px,
-        100% 100% !important;
+    /* Muted: the favicon comes back, dimmed. */
+    &[muted] .tab-icon-image {
+      opacity: 0.45 !important;
     }
 
-    /* Hover: the favicon becomes the mute / unmute button. Blocked autoplay
-       always shows its play button. */
+    /* Hover: a round mute / unmute button. Blocked autoplay always shows
+       its play button. */
+    &:has(.tab-icon-overlay:hover) .tab-icon-image {
+      opacity: 0 !important;
+    }
     & .tab-icon-overlay:not([crashed]):hover,
     &[activemedia-blocked] .tab-icon-overlay:not([crashed]) {
       background-image: none !important;
       background-color: rgb(0 0 0 / 0.62) !important;
-      border-radius: 50% !important;
       fill: white !important;
       animation: none !important;
     }
@@ -357,13 +367,16 @@
 @keyframes mist-eq {
   0%,
   100% {
-    background-size: 1.3px 2px, 1.3px 5px, 1.3px 3px, 100% 100%;
+    background-size: 2px 6px, 2px 12px, 2px 9px, 2px 5px;
   }
-  33% {
-    background-size: 1.3px 5px, 1.3px 2.5px, 1.3px 4.5px, 100% 100%;
+  25% {
+    background-size: 2px 11px, 2px 5px, 2px 13px, 2px 8px;
   }
-  66% {
-    background-size: 1.3px 3.5px, 1.3px 4.5px, 1.3px 2px, 100% 100%;
+  50% {
+    background-size: 2px 4px, 2px 10px, 2px 6px, 2px 13px;
+  }
+  75% {
+    background-size: 2px 9px, 2px 13px, 2px 4px, 2px 7px;
   }
 }
 

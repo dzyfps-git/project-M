@@ -12,9 +12,10 @@ your pages and icons bring the color.
   once. No glow, no colored outline.
 - **Tabs that react.** Hovering a tab gives it a faint glass highlight, and
   while a page loads, a gentle shimmer loops across its tab.
-- **Mute from the favicon.** A playing tab shows a tiny animated equalizer on
-  its favicon instead of Zen's separate speaker button. Hover the favicon and
-  it becomes a mute/unmute button; click to toggle. Muted tabs show flat bars.
+- **A visualizer on playing tabs.** Instead of Zen's separate speaker button,
+  a playing tab swaps its favicon for four bouncing bars. Hover them and they
+  become a mute/unmute button; click to toggle. Muted tabs show their favicon,
+  dimmed.
 - **Quieter tab list.** Background tabs' titles are slightly dimmed. Favicons
   do a tiny spring "pop" on hover and when a tab becomes active. Close buttons
   fade and spring in instead of appearing abruptly.
