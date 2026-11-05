@@ -39,8 +39,27 @@ small, smooth animations. Nothing loud, nothing in the way.
 
 ## Install
 
-Mist isn't in the Zen Mods store yet, so for now you install it by hand with
-`userChrome.css`:
+### With Sine (recommended: updates itself)
+
+[Sine](https://github.com/CosmoCreeper/Sine) is a mod manager for Zen. It
+installs mods straight from a GitHub repo and pulls updates from it, so you
+never have to copy files again.
+
+1. Install Sine using the installer from its
+   [releases page](https://github.com/CosmoCreeper/Sine/releases/latest), then
+   restart Zen.
+2. Open Zen's **Settings** and go to Sine's page.
+3. In the box under "add your own locally from a GitHub repo", type
+   `dzyfps-git/project-M` and click **Install**.
+4. Under **Installed Mods**, open Mist's settings once. Sine applies the
+   default settings (quiet sidebar, hidden space name) the first time you do.
+
+Sine only has two requirements for this repo: it must be **public**, and the
+mod must live on the **`main`** branch.
+
+### By hand (userChrome.css)
+
+If you'd rather not use Sine:
 
 1. In Zen, open `about:config` and set
    `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`.
@@ -64,7 +83,7 @@ To uninstall, remove that line (or the `mist` folder) and restart.
 The on/off settings are regular Zen prefs. In `about:config`, search for the
 name, choose **Boolean**, and click **+**:
 
-| Pref | What it does | Store default |
+| Pref | What it does | Default with Sine |
 | --- | --- | --- |
 | `mod.mist.quiet_sidebar` | Hide the bottom buttons and New Tab row until you hover the sidebar | on |
 | `mod.mist.hide_space_name` | Hide the space name at the top of the tab list | on |
@@ -98,18 +117,43 @@ Some pairs to try:
 - Follow your space color: `var(--zen-primary-color)` →
   `oklch(from var(--zen-primary-color) l c calc(h + 45))`
 
-## Installing it as a proper Zen mod (store)
+## Updating Mist
 
-The `mist` folder is already shaped like a Zen mod. `chrome.css` is the style,
-`preferences.json` holds the settings shown in Zen's mod settings page
-(including an accent-gradient dropdown and a radius box), and `readme.md` is the
-store page. To publish it, submit it through the
-[Zen theme store](https://github.com/zen-browser/theme-store). You'll need a
-screenshot for the store image.
+Edit anything in `mist/` and push it to `main`. That's it.
 
-**Keep the mod's name exactly `Mist`.** Zen exposes dropdown settings on an
-element whose id comes from the mod name (`#theme-Mist`), and the accent
-presets in `chrome.css` look for that id.
+A GitHub Action (`.github/workflows/stamp-update.yml`) then stamps a fresh
+`updatedAt` time into `theme.json`. That's the field Sine checks. Everyone
+using Mist through Sine gets the update on their next update check (or right
+away with **Check for Updates**). The action commits to `main`, so pull before
+your next edit if you work from a local copy.
+
+## Publishing to the Sine store
+
+Once the repo is public, anyone can install Mist by repo name. To also show
+up in the [Sine marketplace](https://sineorg.github.io/store/):
+
+1. Add a real screenshot of Mist in Zen, and put its URL in `theme.json` as
+   `"image"`.
+2. Open an issue on [sineorg/store](https://github.com/sineorg/store/issues/new/choose)
+   using the **Add Theme** template, with this repo's URL.
+
+After that, the store re-syncs from this repo on its own schedule, so the
+"edit and push" flow above still applies.
+
+`theme.json` is the mod's metadata. It sets `"ai": "yes"` because the Sine
+store asks mods to disclose AI involvement, and Mist was written with an AI
+assistant.
+
+**Keep the mod's name exactly `Mist`.** Zen and Sine both expose dropdown
+settings on an element whose id comes from the mod name (`#theme-Mist`), and
+the accent presets in `chrome.css` look for that id.
+
+### The official Zen Mods store
+
+Mist can go in Zen's own store too, through the
+[Zen theme store](https://github.com/zen-browser/theme-store). There, each
+update goes through that store's review process instead of coming straight
+from this repo, which is why Sine is the easier route for frequent updates.
 
 ## Tweaking it live
 

@@ -1,0 +1,18 @@
+{
+  "id": "mist-zen",
+  "name": "Mist",
+  "description": "A calm, clean theme for Zen: a soft violet-to-light-blue gradient, quieter chrome and subtle spring animations.",
+  "homepage": "https://github.com/dzyfps-git/project-M",
+  "readme": "https://raw.githubusercontent.com/dzyfps-git/project-M/main/mist/readme.md",
+  "author": "dzyfps-git",
+  "version": "1.0.0",
+  "createdAt": "2026-11-05",
+  "updatedAt": "2026-11-05T01:00:00Z",
+  "style": {
+    "chrome": "mist/chrome.css"
+  },
+  "preferences": "mist/preferences.json",
+  "tags": ["minimal", "animations", "tabs", "chrome", "zen browser"],
+  "fork": ["zen"],
+  "ai": "yes"
+}

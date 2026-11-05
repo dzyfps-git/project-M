@@ -1,0 +1,48 @@
+# Sine only offers an update when `updatedAt` in theme.json moves forward.
+# This stamps it automatically whenever the mod's files change on main, so
+# publishing an update is just: edit mist/, push.
+name: Stamp mod update
+
+on:
+  push:
+    branches: [main]
+    paths: ["mist/**"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stamp-update
+  cancel-in-progress: false
+
+jobs:
+  stamp:
+    # Pushes made with GITHUB_TOKEN don't trigger workflows, so this can't
+    # loop; the check below is just a second guard.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Stamp updatedAt in theme.json
+        run: |
+          python3 - <<'EOF'
+          import datetime, json
+          path = "theme.json"
+          with open(path) as f:
+              data = json.load(f)
+          data["updatedAt"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+          with open(path, "w") as f:
+              json.dump(data, f, indent=2, ensure_ascii=False)
+              f.write("\n")
+          print("updatedAt ->", data["updatedAt"])
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add theme.json
+          git commit -m "Stamp Mist update"
+          git pull --rebase origin main
+          git push origin HEAD:main
