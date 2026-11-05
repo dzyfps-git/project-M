@@ -7,12 +7,20 @@
   "author": "dzyfps-git",
   "version": "1.0.0",
   "createdAt": "2026-11-05",
-  "updatedAt": "2026-11-05T01:00:00Z",
+  "updatedAt": "2026-11-05T01:49:44Z",
   "style": {
     "chrome": "mist/chrome.css"
   },
   "preferences": "mist/preferences.json",
-  "tags": ["minimal", "animations", "tabs", "chrome", "zen browser"],
-  "fork": ["zen"],
+  "tags": [
+    "minimal",
+    "animations",
+    "tabs",
+    "chrome",
+    "zen browser"
+  ],
+  "fork": [
+    "zen"
+  ],
   "ai": "yes"
 }
