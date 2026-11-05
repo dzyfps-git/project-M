@@ -1,13 +1,13 @@
 [
   {
     "property": "mod.mist.accent",
-    "label": "Accent gradient",
+    "label": "Accent for the loading bar and media progress",
     "type": "dropdown",
-    "placeholder": "Dusk: violet to light blue (default)",
+    "placeholder": "Glass: neutral (default)",
     "options": [
       {
-        "label": "Space: follows your space color",
-        "value": "space"
+        "label": "Dusk: violet to blue",
+        "value": "dusk"
       },
       {
         "label": "Aurora: mint to blue",
@@ -18,8 +18,24 @@
         "value": "sunset"
       },
       {
-        "label": "Mono: greyscale",
-        "value": "mono"
+        "label": "Space: follows your space color",
+        "value": "space"
+      }
+    ]
+  },
+  {
+    "property": "mod.mist.tab_motion",
+    "label": "Active tab motion",
+    "type": "dropdown",
+    "placeholder": "A soft wave of light once when you switch (default)",
+    "options": [
+      {
+        "label": "Drifting light every few seconds",
+        "value": "drift"
+      },
+      {
+        "label": "None",
+        "value": "none"
       }
     ]
   },
@@ -49,20 +65,26 @@
     "defaultValue": false
   },
   {
+    "property": "mod.mist.essentials_color",
+    "label": "Essentials: let the active tile's icon colors drift inside it",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
     "property": "mod.mist.hide_close",
     "label": "Hide tab close buttons (middle-click or Ctrl/Cmd+W still close tabs)",
     "type": "checkbox",
     "defaultValue": false
   },
   {
-    "property": "mod.mist.flat_page",
-    "label": "Flat page: remove the floating shadow around websites",
+    "property": "mod.mist.classic_audio",
+    "label": "Keep Zen's speaker button on playing tabs (instead of the favicon mute control)",
     "type": "checkbox",
     "defaultValue": false
   },
   {
-    "property": "mod.mist.still_tab",
-    "label": "Keep the active tab's gradient still (no slow drift, only the rush when you switch)",
+    "property": "mod.mist.flat_page",
+    "label": "Flat page: remove the floating shadow around websites",
     "type": "checkbox",
     "defaultValue": false
   },

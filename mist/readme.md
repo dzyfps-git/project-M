@@ -1,33 +1,33 @@
 # Mist
 
-A calm, clean theme for Zen. It uses a soft violet-to-light-blue gradient,
-quieter chrome and small, smooth animations.
+A calm, glassy theme for Zen: translucent surfaces, hairline edges, quieter
+chrome and small, smooth animations. The theme stays neutral and lets your
+pages and icons bring the color.
 
-- The active tab is a soft card with a violet-to-blue gradient drifting
-  through it. Switching tabs makes the gradient light up and rush through,
-  then settle.
-- Hovered tabs get a faint violet tint, and loading tabs shimmer.
-- Background tab titles are slightly dimmed, favicons pop gently on hover, and
-  close buttons spring in.
+- The active tab is a pane of frosted glass. A soft wave of light glides
+  across it when you switch to it.
+- Playing tabs show a tiny equalizer on their favicon. Hover it and it becomes
+  a mute/unmute button. Muted tabs show flat bars.
+- Background tab titles are slightly dimmed, favicons pop gently, close buttons
+  spring in, and loading tabs shimmer.
 - Quiet sidebar: the bottom buttons and New Tab row appear when you hover the
-  sidebar.
+  sidebar. The space name is hidden for a cleaner list.
+- The media player is frosted glass with a glass play button and a clean
+  progress bar.
+- Open folders sit on a faint glass tray, so grouped tabs read as one group.
+- Essentials are glass tiles that lift slightly on hover.
 - Websites float on a hairline-edged card with a soft, layered shadow.
 - The floating URL bar blooms in, and its results slide into place.
-- Essentials tiles lift slightly on hover, and the active one flows like the
-  active tab.
-- The media player flows with the gradient while playing and has a round
-  gradient play/pause button and a gradient progress bar.
-- Open folders sit on a faint tinted tray, so grouped tabs read as one group.
-- The active tab's favicon pops gently.
-- The space name is hidden for a cleaner sidebar.
-- Zen's loading bar uses the gradient.
 - Mist follows your system's reduced-motion setting and is tuned for light and
   dark mode.
 
 ## Settings
 
-- **Accent gradient:** Dusk (default), Space (follows your space color),
-  Aurora, Sunset or Mono.
+- **Accent** for the loading bar and media progress: Glass (default), Dusk,
+  Aurora, Sunset or Space.
+- **Active tab motion:** one wave when you switch (default), drifting light
+  every few seconds, or none.
 - **Corner roundness:** any CSS length, e.g. `12px`.
-- **Toggles:** quiet sidebar, hide space name, compact tabs, hide close
-  buttons, flat page, keep the active tab still, no motion.
+- **Toggles:** quiet sidebar, hide space name, compact tabs, drifting icon
+  colors in Essentials, hide close buttons, keep Zen's speaker button, flat
+  page, no motion.

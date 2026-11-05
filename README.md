@@ -1,43 +1,44 @@
-# Mist: a calm, clean theme for Zen Browser
+# Mist: a calm, glassy theme for Zen Browser
 
 Mist is a theme (a "mod") for [Zen Browser](https://zen-browser.app). It keeps
-Zen's layout and adds a soft violet-to-light-blue gradient, quieter chrome and
-small, smooth animations. Nothing loud, nothing in the way.
+Zen's layout and makes it frosted glass: translucent surfaces, hairline edges,
+quieter chrome and small, smooth animations. The theme stays neutral and lets
+your pages and icons bring the color.
 
 ## What it does
 
-- **A living active tab.** The selected tab is a soft card with a
-  violet-to-blue gradient that slowly drifts through it. When you switch to a
-  tab, the gradient lights up and rushes through it, then settles back into
-  the drift. There's no glow or colored outline, just a hairline and a soft
-  shadow.
-- **Tabs that react.** Hovering a tab tints it faintly violet, and while a page
-  loads, a gentle shimmer loops across its tab.
+- **A glass active tab.** The selected tab is a pane of frosted glass with a
+  hairline edge. When you switch to it, a soft wave of light glides across it
+  once. No glow, no colored outline.
+- **Tabs that react.** Hovering a tab gives it a faint glass highlight, and
+  while a page loads, a gentle shimmer loops across its tab.
+- **Mute from the favicon.** A playing tab shows a tiny animated equalizer on
+  its favicon instead of Zen's separate speaker button. Hover the favicon and
+  it becomes a mute/unmute button; click to toggle. Muted tabs show flat bars.
 - **Quieter tab list.** Background tabs' titles are slightly dimmed. Favicons
-  do a tiny spring "pop" on hover. Close buttons fade and spring in instead of
-  appearing abruptly.
+  do a tiny spring "pop" on hover and when a tab becomes active. Close buttons
+  fade and spring in instead of appearing abruptly.
 - **Quiet sidebar.** The bottom buttons and the "+ New Tab" row stay hidden
   until you hover the sidebar. They also stay visible while focus or an open
   menu is in the sidebar.
+- **Hidden space name.** The space name at the top of the tab list is hidden by
+  default for a cleaner sidebar. You can still switch spaces with the icons at
+  the bottom, swipes or shortcuts.
+- **Glass media player.** The player card is frosted glass that blurs what's
+  behind it (including the other cards in the stack). Play/pause is a small
+  glass disc, the progress bar is a clean fill that thickens under the pointer
+  with a white handle, and every control gets a round hover background and a
+  springy press.
+- **Folders that read as groups.** An open folder (Zen's tab groups) sits on a
+  faint glass tray, and folder rows match the tab style.
+- **Essentials.** Clean glass tiles that lift slightly on hover. Optionally,
+  the active tile can hold its icon's colors, slowly drifting inside it.
 - **Floating page.** The website area gets a hairline edge and a softer,
   layered shadow.
 - **URL bar bloom.** The floating URL bar fades in with a gentle spring, and
   the results slide down a few pixels.
-- **Essentials.** The tiles lift slightly on hover, and the active one gets the
-  same flowing gradient as the active tab.
-- **Media player.** The player card carries the gradient too. It flows while
-  something plays and freezes when you pause, and the color drains out when
-  muted. Play/pause is a round gradient button, the progress bar fills with
-  the gradient and thickens under the pointer, and every control gets a round
-  hover background and a springy press.
-- **Folders that read as groups.** An open folder (Zen's tab groups) sits on a
-  faint violet-tinted tray, and folder rows match the tab style.
-- **Favicon pop.** When a tab becomes active, its icon does a tiny spring pop.
-- **Hidden space name.** The space name at the top of the tab list is hidden by
-  default for a cleaner sidebar. You can still switch spaces with the icons at
-  the bottom, swipes or shortcuts.
-- **Small touches.** Zen's page-loading bar uses the gradient. Toolbar buttons
-  have a tactile press. Menu items are rounder and fade on hover.
+- **Small touches.** Toolbar buttons have a tactile press. Menu items are
+  rounder and fade on hover.
 - **Respects your system.** If your OS asks for reduced motion, Mist turns its
   animations off. Light and dark mode are both tuned.
 
@@ -93,22 +94,28 @@ name, choose **Boolean**, and click **+**:
 | `mod.mist.hide_space_name` | Hide the space name at the top of the tab list | on |
 | `mod.mist.compact_tabs` | Shorter tab rows | off |
 | `mod.mist.hide_close` | Hide tab close buttons (middle-click or Ctrl/Cmd+W still work) | off |
+| `mod.mist.essentials_color` | Let the active Essentials tile's icon colors drift inside it | off |
+| `mod.mist.classic_audio` | Keep Zen's speaker button on playing tabs instead of the favicon mute control | off |
 | `mod.mist.flat_page` | Remove the floating shadow around websites | off |
-| `mod.mist.still_tab` | Keep the active tab's gradient still (only the rush when you switch) | off |
 | `mod.mist.no_motion` | Turn off Mist's animations | off |
 
 With a hand install, every pref starts **off** until you create it. So if you
 want the quiet sidebar and the hidden space name, add
 `mod.mist.quiet_sidebar` = `true` and `mod.mist.hide_space_name` = `true`.
 
-### Changing the colors or roundness by hand
+The two dropdowns (accent and active tab motion) only exist in the mod
+settings, not in `about:config`. With a hand install you get their defaults:
+neutral glass, and a single wave when you switch tabs.
 
-Add a rule to `userChrome.css` **below** the `@import` line:
+### Changing the accent or roundness by hand
+
+The accent only colors two small things: Zen's page-loading bar and the media
+progress bar. Add a rule to `userChrome.css` **below** the `@import` line:
 
 ```css
 :root {
-  --mist-a: #9b87ff;         /* gradient start (violet) */
-  --mist-b: #6cc8ff;         /* gradient end (light blue) */
+  --mist-a: #9b87ff;         /* accent start (violet) */
+  --mist-b: #6cc8ff;         /* accent end (light blue) */
   --mod-mist-radius: 12px;   /* roundness of tabs, tiles and menus */
 }
 ```
@@ -175,6 +182,7 @@ system and animations it hooks into were all checked there). It has **not
 yet been run inside a live Zen window**. If anything looks off, inspect it with
 the Browser Toolbox, or open an issue with a screenshot.
 
-The active tab's slow drift is a small, continuous animation. If you'd rather
-have no ongoing motion, turn on "Keep the active tab's gradient still"; the
-rush when you switch tabs stays.
+The favicon mute control reuses Firefox's own sound badge on the favicon, so
+clicking it should mute and unmute the tab the same way Firefox does. If it
+doesn't in your Zen version, turn on "Keep Zen's speaker button" to get the
+original back.

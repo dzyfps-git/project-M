@@ -1,5 +1,5 @@
 /*
- * Mist — a calm, clean theme for Zen Browser
+ * Mist — a calm, glassy theme for Zen Browser
  * https://github.com/dzyfps-git/project-M
  *
  * Notes for anyone editing this file:
@@ -31,9 +31,10 @@
   --mist-base: 160ms;
   --mist-slow: 280ms;
   --mist-sheen-time: 700ms;
-  /* Active-tab gradient: a quick rush on switch, then a slow drift. */
-  --mist-rush-time: 900ms;
-  --mist-flow-time: 9s;
+  --mist-wave-time: 1100ms; /* the light wave when you switch tabs */
+  --mist-wave-idle: 7s; /* ...and how often it drifts by, if enabled */
+  --mist-drift-time: 12s; /* the Essentials favicon colours */
+  --mist-eq-time: 900ms; /* the equalizer on playing tabs */
   --mist-ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* A gentle spring with about 2% overshoot. */
   --mist-spring: linear(
@@ -42,46 +43,45 @@
     1.001
   );
 
-  /* Colour: a two-stop gradient. Default "Dusk" runs violet → light blue.
-     Every accent effect is built from --mist-a and --mist-b, so a preset
-     (or your own edit) only needs to change those two. */
-  --mist-a: #9b87ff;
-  --mist-b: #6cc8ff;
-  --mist-accent: color-mix(in oklch, var(--mist-a), var(--mist-b));
-  --mist-gradient: linear-gradient(110deg, var(--mist-a), var(--mist-b));
-  /* Faint, accent-tinted tray behind open folders. */
-  --mist-tray: light-dark(
-    color-mix(in srgb, var(--mist-a) 9%, rgb(0 0 0 / 0.015)),
-    color-mix(in srgb, var(--mist-a) 7%, rgb(255 255 255 / 0.025))
+  /* Glass: translucent surfaces with a hairline edge. The theme stays
+     neutral and lets your pages and icons bring the colour. */
+  --mist-glass: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.07));
+  --mist-glass-card: light-dark(rgb(255 255 255 / 0.5), rgb(255 255 255 / 0.06));
+  --mist-glass-button: light-dark(rgb(0 0 0 / 0.06), rgb(255 255 255 / 0.12));
+  --mist-glass-button-hover: light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.2));
+  --mist-hover: light-dark(rgb(0 0 0 / 0.045), rgb(255 255 255 / 0.05));
+  --mist-press: color-mix(in srgb, currentColor 12%, transparent);
+  --mist-tray: light-dark(rgb(0 0 0 / 0.03), rgb(255 255 255 / 0.035));
+  --mist-hairline: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.08));
+  --mist-shadow-soft: light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.28));
+  --mist-shadow-deep: light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.6));
+
+  /* A soft, wide band of light that glides across the active tab. */
+  --mist-wave: linear-gradient(
+    100deg,
+    transparent 20%,
+    light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.11)) 50%,
+    transparent 80%
   );
-  /* A soft band of light used for the selection sweep and loading shimmer. */
+  /* A narrower band for the loading shimmer. */
   --mist-sheen: linear-gradient(
     100deg,
     transparent 42%,
-    light-dark(
-      color-mix(in srgb, var(--mist-b) 30%, rgb(255 255 255 / 0.6)),
-      color-mix(in srgb, var(--mist-b) 22%, rgb(255 255 255 / 0.14))
-    ) 50%,
+    light-dark(rgb(255 255 255 / 0.75), rgb(255 255 255 / 0.13)) 50%,
     transparent 58%
   );
-  /* Hover: a faint violet tint instead of plain grey. */
-  --mist-hover-tint: light-dark(
-    color-mix(in srgb, var(--mist-a) 13%, rgb(0 0 0 / 0.02)),
-    color-mix(in srgb, var(--mist-a) 14%, rgb(255 255 255 / 0.04))
-  );
 
-  --mist-press: color-mix(in srgb, currentColor 12%, transparent);
-  --mist-hairline: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.08));
-  --mist-surface: light-dark(rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.1));
-  --mist-shadow-soft: light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.28));
-  --mist-shadow-deep: light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.6));
+  /* Accent for the few small coloured bits (loading bar, media progress).
+     Glass by default: neutral. The presets below swap in colours. */
+  --mist-a: light-dark(rgb(0 0 0 / 0.6), rgb(255 255 255 / 0.85));
+  --mist-b: light-dark(rgb(0 0 0 / 0.4), rgb(255 255 255 / 0.6));
+  --mist-gradient: linear-gradient(110deg, var(--mist-a), var(--mist-b));
 }
 
-/* Accent presets, picked in Zen's mod settings. No choice = Dusk. */
-:root:has(#theme-Mist[mod-mist-accent="space"]) {
-  /* Your space colour, fading into a neighbouring hue. */
-  --mist-a: var(--zen-primary-color);
-  --mist-b: oklch(from var(--zen-primary-color) l c calc(h + 45));
+/* Accent presets, picked in the mod settings. No choice = Glass. */
+:root:has(#theme-Mist[mod-mist-accent="dusk"]) {
+  --mist-a: #9b87ff;
+  --mist-b: #6cc8ff;
 }
 :root:has(#theme-Mist[mod-mist-accent="aurora"]) {
   --mist-a: #34d399;
@@ -91,9 +91,9 @@
   --mist-a: #ff7aa2;
   --mist-b: #ffb35c;
 }
-:root:has(#theme-Mist[mod-mist-accent="mono"]) {
-  --mist-a: light-dark(#2b2b2f, #f5f5f7);
-  --mist-b: light-dark(#6e6e73, #a1a1a6);
+:root:has(#theme-Mist[mod-mist-accent="space"]) {
+  --mist-a: var(--zen-primary-color);
+  --mist-b: oklch(from var(--zen-primary-color) l c calc(h + 45));
 }
 
 /* One switch turns off every Mist animation and transition. */
@@ -103,8 +103,10 @@
     --mist-base: 0s;
     --mist-slow: 0s;
     --mist-sheen-time: 0s;
-    --mist-rush-time: 0s;
-    --mist-flow-time: 0s;
+    --mist-wave-time: 0s;
+    --mist-wave-idle: 0s;
+    --mist-drift-time: 0s;
+    --mist-eq-time: 0s;
     --mist-sheen: none;
   }
 }
@@ -124,56 +126,50 @@
   }
 
   &:hover:not([selected], [multiselected]) > .tab-stack > .tab-background {
-    background-color: var(--mist-hover-tint) !important;
+    background-color: var(--mist-hover) !important;
   }
 
-  /* The active tab is a soft, raised card with the gradient flowing
-     through it. The gradient repeats every half of its (double-width)
-     image, so moving it by 100% loops seamlessly. --mist-boost brightens
-     it for a moment when the tab becomes active. */
+  /* The active tab is a pane of frosted glass. */
   &:is([selected], [multiselected]) > .tab-stack > .tab-background {
-    background-color: var(--mist-surface) !important;
-    --mist-flow-image: linear-gradient(
-      100deg,
-      var(--mist-flow-a) 0%,
-      var(--mist-flow-b) 25%,
-      var(--mist-flow-a) 50%,
-      var(--mist-flow-b) 75%,
-      var(--mist-flow-a) 100%
-    );
-    background-image: var(--mist-flow-image) !important;
-    background-size: 200% 100% !important;
-    background-repeat: no-repeat !important;
-    background-position: 0% 0;
+    background-color: var(--mist-glass) !important;
+    background-image: none !important;
     box-shadow:
       inset 0 0 0 1px var(--mist-hairline),
       0 1px 2px var(--mist-shadow-soft),
       0 4px 12px -6px var(--mist-shadow-soft) !important;
-    /* Declared here (not on :root) so they pick up --mist-boost as it
-       animates on this element. */
-    --mist-flow-a: light-dark(
-      color-mix(in srgb, var(--mist-a) calc(20% + 34% * var(--mist-boost, 0)), transparent),
-      color-mix(in srgb, var(--mist-a) calc(24% + 30% * var(--mist-boost, 0)), transparent)
-    );
-    --mist-flow-b: light-dark(
-      color-mix(in srgb, var(--mist-b) calc(12% + 30% * var(--mist-boost, 0)), transparent),
-      color-mix(in srgb, var(--mist-b) calc(14% + 28% * var(--mist-boost, 0)), transparent)
-    );
   }
 
-  /* Switching to a tab: the gradient lights up and rushes through it, then
-     settles into a slow drift. The rush ends exactly one loop along, so the
-     drift picks up without a jump. */
-  &[selected] > .tab-stack > .tab-background {
-    animation:
-      mist-flow-rush var(--mist-rush-time) var(--mist-ease),
-      mist-flow var(--mist-flow-time) linear var(--mist-rush-time) infinite !important;
+  /* A soft wave of light glides through the active tab once when you
+     switch to it. It lives on its own layer and only moves with
+     `translate`, which the compositor handles cheaply.
+     This is the same layering Zen uses for its Essentials favicon
+     backgrounds: the background becomes a positioned box, and the content
+     is kept above it. */
+  &[selected] > .tab-stack {
+    & > .tab-background {
+      position: relative !important;
+      overflow: hidden !important;
+
+      &::after {
+        content: "" !important;
+        position: absolute !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+        background: var(--mist-wave) !important;
+        translate: -100% 0;
+        animation: mist-wave var(--mist-wave-time) var(--mist-ease) !important;
+      }
+    }
+
+    & > .tab-content {
+      position: relative !important;
+    }
   }
 
-  /* While a page loads, the same light loops across its tab. */
+  /* While a page loads, a narrower band of light loops across its tab. */
   &[busy] > .tab-stack > .tab-background {
-    background-image: var(--mist-sheen), var(--mist-flow-image, none) !important;
-    background-size: 250% 100%, 200% 100% !important;
+    background-image: var(--mist-sheen) !important;
+    background-size: 250% 100% !important;
     background-repeat: no-repeat !important;
     animation: mist-sheen calc(var(--mist-sheen-time) * 1.8) ease-in-out infinite !important;
   }
@@ -223,11 +219,21 @@
   }
 }
 
-@media -moz-pref("mod.mist.still_tab") {
+/* "Active tab motion" setting. Default: the single wave above. */
+
+/* Drifting light: the wave keeps drifting by every few seconds. */
+:root:has(#theme-Mist[mod-mist-tab_motion="drift"])
   .tabbrowser-tab:not([zen-essential], [zen-glance-tab], tab-group[split-view-group] > *)[selected]
-    > .tab-stack > .tab-background {
-    animation: mist-flow-rush var(--mist-rush-time) var(--mist-ease) !important;
-  }
+  > .tab-stack > .tab-background::after {
+  animation:
+    mist-wave var(--mist-wave-time) var(--mist-ease),
+    mist-wave-idle var(--mist-wave-idle) ease-in-out var(--mist-wave-time) infinite !important;
+}
+
+/* None: no wave at all. */
+:root:has(#theme-Mist[mod-mist-tab_motion="none"])
+  .tabbrowser-tab[selected] > .tab-stack > .tab-background::after {
+  display: none !important;
 }
 
 @media -moz-pref("mod.mist.compact_tabs") {
@@ -242,47 +248,127 @@
   }
 }
 
-/* A registered number animates smoothly. Where @property isn't honoured,
-   --mist-boost just falls back to 0 and the tab keeps its resting colours. */
-@property --mist-boost {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 0;
-}
-
-@keyframes mist-flow {
+@keyframes mist-wave {
   from {
-    background-position: 0% 0;
+    translate: -100% 0;
   }
   to {
-    background-position: 100% 0;
+    translate: 100% 0;
   }
 }
 
-@keyframes mist-flow-rush {
-  from {
-    background-position: 0% 0;
-    --mist-boost: 1;
+/* Glide across in the first ~2 seconds, then rest off to the side. */
+@keyframes mist-wave-idle {
+  0% {
+    translate: -100% 0;
   }
-  to {
-    background-position: 100% 0;
-    --mist-boost: 0;
+  30%,
+  100% {
+    translate: 100% 0;
   }
 }
 
-/* Loading shimmer: only the first layer (the sheen) moves, from just off
-   the left edge to just off the right. */
+/* Loading shimmer: the band moves from just off the left edge to just
+   off the right. */
 @keyframes mist-sheen {
   from {
-    background-position: 100% 0, 0 0;
+    background-position: 100% 0;
   }
   to {
-    background-position: 0% 0, 0 0;
+    background-position: 0% 0;
   }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   3. Favicons: a little pop when a tab becomes active
+   3. Sound on tabs: the favicon is the mute button
+   Instead of Zen's separate speaker button, a playing tab shows a tiny
+   equalizer on its favicon. Hover the favicon and it turns into a mute /
+   unmute button; click it to toggle. Muted tabs show flat bars.
+   (This is Firefox's own favicon sound badge, restyled, so the click
+   behaviour is Firefox's.)
+   ════════════════════════════════════════════════════════════════════════ */
+
+@media not -moz-pref("mod.mist.classic_audio") {
+  :root[zen-sidebar-expanded="true"]
+    .tabbrowser-tab:not([zen-essential], [zen-glance-tab]):is([soundplaying], [muted], [activemedia-blocked]) {
+    & .tab-audio-button {
+      display: none !important;
+    }
+
+    & .tab-icon-overlay:not([crashed]) {
+      display: block !important;
+      position: relative !important;
+      inset: 0 !important;
+      box-sizing: border-box !important;
+      width: 16px !important;
+      height: 16px !important;
+      padding: 2px !important;
+      border-radius: 5px !important;
+      background-color: transparent !important;
+      /* The speaker glyph only shows on hover. */
+      fill: transparent !important;
+      stroke: transparent !important;
+      transition: background-color var(--mist-fast) var(--mist-ease) !important;
+      /* Three bars on a small dark chip in the favicon's corner. */
+      background-image:
+        linear-gradient(#fff, #fff),
+        linear-gradient(#fff, #fff),
+        linear-gradient(#fff, #fff),
+        radial-gradient(circle at 11.5px 11.5px, rgb(0 0 0 / 0.62) 0 4.5px, transparent 5px) !important;
+      background-repeat: no-repeat !important;
+      background-position:
+        left 8.75px bottom 2px,
+        left 10.85px bottom 2px,
+        left 12.95px bottom 2px,
+        0 0 !important;
+      /* Not !important: the equalizer animates this. */
+      background-size:
+        1.3px 2px,
+        1.3px 5px,
+        1.3px 3px,
+        100% 100%;
+    }
+
+    &[soundplaying]:not([muted]) .tab-icon-overlay:not([crashed]) {
+      animation: mist-eq var(--mist-eq-time) ease-in-out infinite !important;
+    }
+
+    &[muted] .tab-icon-overlay:not([crashed]) {
+      background-size:
+        1.3px 1.2px,
+        1.3px 1.2px,
+        1.3px 1.2px,
+        100% 100% !important;
+    }
+
+    /* Hover: the favicon becomes the mute / unmute button. Blocked autoplay
+       always shows its play button. */
+    & .tab-icon-overlay:not([crashed]):hover,
+    &[activemedia-blocked] .tab-icon-overlay:not([crashed]) {
+      background-image: none !important;
+      background-color: rgb(0 0 0 / 0.62) !important;
+      border-radius: 50% !important;
+      fill: white !important;
+      animation: none !important;
+    }
+  }
+}
+
+@keyframes mist-eq {
+  0%,
+  100% {
+    background-size: 1.3px 2px, 1.3px 5px, 1.3px 3px, 100% 100%;
+  }
+  33% {
+    background-size: 1.3px 5px, 1.3px 2.5px, 1.3px 4.5px, 100% 100%;
+  }
+  66% {
+    background-size: 1.3px 3.5px, 1.3px 4.5px, 1.3px 2px, 100% 100%;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   4. Favicons: a little pop when a tab becomes active
    ════════════════════════════════════════════════════════════════════════ */
 
 .tabbrowser-tab:not([zen-glance-tab])[selected] > .tab-stack > .tab-content > .tab-icon-stack {
@@ -298,7 +384,7 @@
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   4. Folders (Zen's tab groups)
+   5. Folders (Zen's tab groups)
    ════════════════════════════════════════════════════════════════════════ */
 
 zen-folder > .tab-group-label-container::before {
@@ -306,9 +392,9 @@ zen-folder > .tab-group-label-container::before {
   transition: background-color var(--mist-fast) var(--mist-ease) !important;
 }
 
-/* An open folder sits on a faint tray, so its tabs read as one group.
-   `isolation` keeps the folder row's hover highlight above the tray.
-   The tray steps aside while you drag tabs around. */
+/* An open folder sits on a faint glass tray, so its tabs read as one
+   group. `isolation` keeps the folder row's hover highlight above the
+   tray. The tray steps aside while you drag tabs around. */
 :root[zen-sidebar-expanded="true"] #tabbrowser-tabs:not([movingtab]) zen-folder:not([collapsed]) {
   background-color: var(--mist-tray) !important;
   border-radius: var(--mist-radius) !important;
@@ -316,7 +402,7 @@ zen-folder > .tab-group-label-container::before {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   5. Essentials: tiles that lift slightly on hover
+   6. Essentials: glass tiles that lift slightly on hover
    ════════════════════════════════════════════════════════════════════════ */
 
 .tabbrowser-tab[zen-essential]:not([zen-glance-tab]) {
@@ -337,32 +423,60 @@ zen-folder > .tab-group-label-container::before {
     box-shadow: 0 6px 14px -8px var(--mist-shadow-deep) !important;
   }
 
-  /* The active tile gets the same flowing gradient as the active tab. */
-  &:is([selected], [multiselected]) > .tab-stack > .tab-background {
-    --mist-flow-a: color-mix(in srgb, var(--mist-a) calc(24% + 30% * var(--mist-boost, 0)), transparent);
-    --mist-flow-b: color-mix(in srgb, var(--mist-b) calc(16% + 28% * var(--mist-boost, 0)), transparent);
-    background-image: linear-gradient(
-      100deg,
-      var(--mist-flow-a) 0%,
-      var(--mist-flow-b) 25%,
-      var(--mist-flow-a) 50%,
-      var(--mist-flow-b) 75%,
-      var(--mist-flow-a) 100%
-    ) !important;
-    background-size: 200% 100% !important;
-    background-repeat: no-repeat !important;
-    background-position: 0% 0;
+  /* The active tile is clean glass with a hairline. */
+  &:is([selected], [visuallyselected]) > .tab-stack > .tab-background {
     box-shadow: inset 0 0 0 1px var(--mist-hairline) !important;
   }
-  &[selected] > .tab-stack > .tab-background {
-    animation:
-      mist-flow-rush var(--mist-rush-time) var(--mist-ease),
-      mist-flow var(--mist-flow-time) linear var(--mist-rush-time) infinite !important;
+}
+
+/* Optional: the active tile holds a blurred copy of its own favicon that
+   slowly drifts and turns, so the icon's colours flow inside the glass.
+   Zen provides the favicon as --zen-essential-tab-icon. */
+@media -moz-pref("mod.mist.essentials_color") {
+  .tabbrowser-tab[zen-essential]:not([zen-glance-tab]):is([selected], [visuallyselected])
+    > .tab-stack {
+    & > .tab-background {
+      position: relative !important;
+      overflow: hidden !important;
+
+      &::after {
+        content: "" !important;
+        position: absolute !important;
+        inset: -45% !important;
+        pointer-events: none !important;
+        background: var(--zen-essential-tab-icon, none) center / 42% no-repeat !important;
+        filter: blur(14px) saturate(1.8) !important;
+        opacity: 0.5 !important;
+        animation: mist-drift var(--mist-drift-time) ease-in-out infinite alternate !important;
+      }
+    }
+
+    & > .tab-content {
+      position: relative !important;
+    }
+  }
+}
+
+@keyframes mist-drift {
+  0% {
+    translate: -10% -6%;
+    rotate: 0deg;
+    scale: 1;
+  }
+  50% {
+    translate: 9% 5%;
+    rotate: 24deg;
+    scale: 1.18;
+  }
+  100% {
+    translate: -4% 9%;
+    rotate: -16deg;
+    scale: 1.06;
   }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   6. Sidebar buttons and the space name
+   7. Sidebar buttons and the space name
    ════════════════════════════════════════════════════════════════════════ */
 
 :is(#zen-sidebar-top-buttons, #zen-sidebar-foot-buttons, #nav-bar, #zen-media-controls-toolbar) .toolbarbutton-1 {
@@ -411,7 +525,7 @@ zen-folder > .tab-group-label-container::before {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   7. The page: a softer floating card with a hairline edge
+   8. The page: a softer floating card with a hairline edge
    ════════════════════════════════════════════════════════════════════════ */
 
 :root:not([inDOMFullscreen="true"], [zen-no-padding="true"])
@@ -432,7 +546,7 @@ zen-folder > .tab-group-label-container::before {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   8. URL bar
+   9. URL bar
    ════════════════════════════════════════════════════════════════════════ */
 
 /* Opening in place: the background grows out slightly. */
@@ -464,7 +578,7 @@ zen-folder > .tab-group-label-container::before {
   transition: background-color var(--mist-fast) var(--mist-ease) !important;
 }
 
-/* Zen's page-loading pill picks up the gradient. */
+/* Zen's page-loading pill uses the accent (neutral glass by default). */
 #zen-loading-progress-bar {
   --zen-loading-progress-bar-color: var(--mist-gradient) !important;
 }
@@ -496,7 +610,7 @@ zen-folder > .tab-group-label-container::before {
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   9. Menus and panels: rounder items with a gentle hover fade
+   10. Menus and panels: rounder items with a gentle hover fade
    ════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -514,52 +628,26 @@ menupopup :is(menuitem, menu),
 }
 
 /* ════════════════════════════════════════════════════════════════════════
-   10. Media player
+   11. Media player
    Zen animates the cards' position, opacity and blur to stack them, so
    Mist leaves those alone and only restyles the surface and controls.
    ════════════════════════════════════════════════════════════════════════ */
 
-/* The card carries the same gradient as the active tab. It flows while
-   something is playing and freezes in place when paused. */
+/* Frosted glass: translucent, blurring whatever is behind it (including
+   the other cards in the stack). */
 .zen-media-card {
-  --mist-flow-a: light-dark(
-    color-mix(in srgb, var(--mist-a) 18%, transparent),
-    color-mix(in srgb, var(--mist-a) 22%, transparent)
-  );
-  --mist-flow-b: light-dark(
-    color-mix(in srgb, var(--mist-b) 10%, transparent),
-    color-mix(in srgb, var(--mist-b) 13%, transparent)
-  );
   border-radius: var(--mist-radius) !important;
-  background-image: linear-gradient(
-    100deg,
-    var(--mist-flow-a) 0%,
-    var(--mist-flow-b) 25%,
-    var(--mist-flow-a) 50%,
-    var(--mist-flow-b) 75%,
-    var(--mist-flow-a) 100%
-  ) !important;
-  background-size: 200% 100% !important;
-  background-repeat: no-repeat !important;
+  background-color: var(--mist-glass-card) !important;
+  background-image: none !important;
+  backdrop-filter: blur(24px) saturate(1.6) !important;
   box-shadow:
-    0 1px 2px var(--mist-shadow-soft),
-    0 10px 24px -12px var(--mist-shadow-deep) !important;
-  animation: mist-flow var(--mist-flow-time) linear infinite paused !important;
-
-  &.playing:not([muted]) {
-    animation-play-state: running !important;
-  }
-
-  /* Muted: the colour drains out so it's obvious at a glance. */
-  &[muted] {
-    --mist-flow-a: color-mix(in srgb, currentColor 6%, transparent);
-    --mist-flow-b: color-mix(in srgb, currentColor 3%, transparent);
-  }
+    inset 0 0 0 1px var(--mist-hairline),
+    0 10px 28px -14px var(--mist-shadow-deep) !important;
 }
 
 /* Zen fades the title's left edge by painting a strip of the card colour
-   over it, which would show as a seam on the tinted card. Instead, while a
-   long title scrolls (on hover), a see-through mask fades both edges. */
+   over it, which would show as a seam on the glass. Instead, while a long
+   title scrolls (on hover), a see-through mask fades both edges. */
 .zen-media-info-vbox::before {
   display: none !important;
 }
@@ -581,19 +669,18 @@ menupopup :is(menuitem, menu),
     border-radius: 999px !important;
   }
 
-  /* Play/pause is the focal point: a gradient circle with a white icon. */
+  /* Play/pause: a small glass disc. */
   & .zen-media-playpause-button > .toolbarbutton-icon {
-    background-image: var(--mist-gradient) !important;
+    background-color: var(--mist-glass-button) !important;
     border-radius: 50% !important;
-    fill: white !important;
-    box-shadow: 0 2px 6px -2px var(--mist-shadow-deep) !important;
+    box-shadow: inset 0 0 0 1px var(--mist-hairline) !important;
   }
   & .zen-media-playpause-button:hover > .toolbarbutton-icon {
-    filter: brightness(1.08) saturate(1.1);
+    background-color: var(--mist-glass-button-hover) !important;
   }
 
-  /* Progress: a gradient fill that thickens a little under the pointer,
-     with a clean white handle that springs in. */
+  /* Progress: a clean fill that thickens a little under the pointer, with
+     a white handle that springs in. */
   & .zen-media-progress-bar {
     &:hover {
       --progress-height: 6px;
@@ -607,9 +694,4 @@ menupopup :is(menuitem, menu),
       transition: transform var(--mist-base) var(--mist-spring) !important;
     }
   }
-}
-
-/* Mono's light gradient needs a dark icon in dark mode. */
-:root:has(#theme-Mist[mod-mist-accent="mono"]) .zen-media-playpause-button > .toolbarbutton-icon {
-  fill: light-dark(white, #1d1d1f) !important;
 }
