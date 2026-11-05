@@ -1,0 +1,449 @@
+/*
+ * Mist — a calm, clean theme for Zen Browser
+ * https://github.com/dzyfps-git/project-M
+ *
+ * Notes for anyone editing this file:
+ *  - Zen loads mods (and userChrome.css) as *user* stylesheets. Zen's own
+ *    styles are author-level, so anything that overrides them needs
+ *    !important.
+ *  - Properties animated by @keyframes are deliberately NOT !important on
+ *    the animated element: important declarations beat animations, so the
+ *    animation would never show.
+ *  - Settings come from preferences.json:
+ *      checkbox  -> @media -moz-pref("mod.mist.<name>")
+ *      dropdown  -> attribute on the hidden #theme-Mist element
+ *      string    -> CSS variable --mod-mist-<name> on :root
+ */
+
+/* ════════════════════════════════════════════════════════════════════════
+   1. Design tokens
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Shape. The page itself keeps Zen's radius so it stays concentric with
+     the window corners; Mist's radius applies to tabs, rows and tiles. */
+  --mist-radius: var(--mod-mist-radius, 12px);
+  --mist-radius-md: calc(var(--mist-radius) * 0.75);
+  --mist-radius-sm: calc(var(--mist-radius) * 0.5);
+
+  /* Motion */
+  --mist-fast: 140ms;
+  --mist-base: 260ms;
+  --mist-slow: 420ms;
+  --mist-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* A gentle spring with about 2% overshoot. */
+  --mist-spring: linear(
+    0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%,
+    0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%, 1.017 63.9%,
+    1.001
+  );
+
+  /* Colour: a two-stop gradient. Default "Dusk" runs violet → light blue.
+     Every accent effect is built from --mist-a and --mist-b, so a preset
+     (or your own edit) only needs to change those two. */
+  --mist-a: #9b87ff;
+  --mist-b: #6cc8ff;
+  --mist-accent: color-mix(in oklch, var(--mist-a), var(--mist-b));
+  --mist-gradient: linear-gradient(110deg, var(--mist-a), var(--mist-b));
+  /* A faint wash of the gradient, used to tint the active tab. */
+  --mist-wash: linear-gradient(
+    110deg,
+    light-dark(
+      color-mix(in srgb, var(--mist-a) 22%, transparent),
+      color-mix(in srgb, var(--mist-a) 24%, transparent)
+    ),
+    light-dark(
+      color-mix(in srgb, var(--mist-b) 14%, transparent),
+      color-mix(in srgb, var(--mist-b) 13%, transparent)
+    )
+  );
+  --mist-ring: color-mix(in srgb, var(--mist-accent) 35%, var(--mist-hairline));
+  /* Faint, accent-tinted tray behind open folders. */
+  --mist-tray: light-dark(
+    color-mix(in srgb, var(--mist-a) 9%, rgb(0 0 0 / 0.015)),
+    color-mix(in srgb, var(--mist-a) 7%, rgb(255 255 255 / 0.025))
+  );
+  /* Two-tone glow: violet on the left, blue on the right. */
+  --mist-glow-a: color-mix(in srgb, var(--mist-a) 42%, transparent);
+  --mist-glow-b: color-mix(in srgb, var(--mist-b) 42%, transparent);
+
+  --mist-hover: color-mix(in srgb, currentColor 7%, transparent);
+  --mist-press: color-mix(in srgb, currentColor 12%, transparent);
+  --mist-hairline: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.08));
+  --mist-surface: light-dark(rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.1));
+  --mist-shadow-soft: light-dark(rgb(0 0 0 / 0.06), rgb(0 0 0 / 0.28));
+  --mist-shadow-deep: light-dark(rgb(0 0 0 / 0.22), rgb(0 0 0 / 0.6));
+}
+
+/* Accent presets, picked in Zen's mod settings. No choice = Dusk. */
+:root:has(#theme-Mist[mod-mist-accent="space"]) {
+  /* Your space colour, fading into a neighbouring hue. */
+  --mist-a: var(--zen-primary-color);
+  --mist-b: oklch(from var(--zen-primary-color) l c calc(h + 45));
+}
+:root:has(#theme-Mist[mod-mist-accent="aurora"]) {
+  --mist-a: #34d399;
+  --mist-b: #3b9eff;
+}
+:root:has(#theme-Mist[mod-mist-accent="sunset"]) {
+  --mist-a: #ff7aa2;
+  --mist-b: #ffb35c;
+}
+:root:has(#theme-Mist[mod-mist-accent="mono"]) {
+  --mist-a: light-dark(#2b2b2f, #f5f5f7);
+  --mist-b: light-dark(#6e6e73, #a1a1a6);
+}
+
+/* One switch turns off every Mist animation and transition. */
+@media (prefers-reduced-motion: reduce), -moz-pref("mod.mist.no_motion") {
+  :root {
+    --mist-fast: 0s;
+    --mist-base: 0s;
+    --mist-slow: 0s;
+  }
+}
+
+@media -moz-pref("mod.mist.no_glow") {
+  :root {
+    --mist-glow-a: transparent;
+    --mist-glow-b: transparent;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   2. Tabs
+   Regular tabs only: Essentials, Glance previews and split-view groups
+   keep their own layouts.
+   ════════════════════════════════════════════════════════════════════════ */
+
+.tabbrowser-tab:not([zen-essential], [zen-glance-tab], tab-group[split-view-group] > *) {
+  & > .tab-stack > .tab-background {
+    border-radius: var(--mist-radius-md) !important;
+    transition:
+      background-color var(--mist-base) var(--mist-ease),
+      box-shadow var(--mist-base) var(--mist-ease) !important;
+  }
+
+  &:hover:not([selected], [multiselected]) > .tab-stack > .tab-background {
+    background-color: var(--mist-hover) !important;
+  }
+
+  /* The active tab is a soft, raised card: a faint gradient wash, an
+     accent-tinted edge and a violet-to-blue glow underneath. */
+  &:is([selected], [multiselected]) > .tab-stack > .tab-background {
+    background-color: var(--mist-surface) !important;
+    background-image: var(--mist-wash) !important;
+    box-shadow:
+      inset 0 0 0 1px var(--mist-ring),
+      0 1px 2px var(--mist-shadow-soft),
+      -5px 6px 16px -9px var(--mist-glow-a),
+      5px 6px 16px -9px var(--mist-glow-b) !important;
+  }
+
+  /* Favicon gets a small spring pop on hover. */
+  & > .tab-stack > .tab-content > .tab-icon-stack {
+    transition: scale var(--mist-base) var(--mist-spring) !important;
+  }
+  /* Not !important, so the selection "pop" below can animate over it. */
+  &:hover > .tab-stack > .tab-content > .tab-icon-stack {
+    scale: 1.08;
+  }
+
+  /* Background tabs read a little quieter than the active one. */
+  & .tab-label {
+    transition:
+      color var(--mist-base) var(--mist-ease),
+      transform 0.1s ease-in-out !important; /* keep Zen's sublabel shift */
+  }
+  &:not([selected], [multiselected], :hover) .tab-label {
+    color: color-mix(in srgb, currentColor 75%, transparent) !important;
+  }
+
+  /* Close / reset buttons fade and spring in instead of popping. */
+  & > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button) {
+    opacity: 0 !important;
+    scale: 0.6 !important;
+    transition:
+      opacity var(--mist-fast) var(--mist-ease),
+      scale var(--mist-base) var(--mist-spring),
+      background-color var(--mist-fast) var(--mist-ease) !important;
+  }
+  &:is([selected], [multiselected]) > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button) {
+    opacity: 0.5 !important;
+    scale: 1 !important;
+  }
+  &:hover > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button) {
+    opacity: 0.75 !important;
+    scale: 1 !important;
+  }
+  & > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button):hover {
+    opacity: 1 !important;
+    background-color: var(--mist-press) !important;
+  }
+  & > .tab-stack > .tab-content > :is(.tab-close-button, .tab-reset-button):hover:active {
+    scale: 0.85 !important;
+  }
+}
+
+@media -moz-pref("mod.mist.compact_tabs") {
+  .tabbrowser-tab:not([zen-essential], [zen-glance-tab], tab-group[split-view-group] > *) {
+    --tab-min-height: 30px !important;
+  }
+}
+
+@media -moz-pref("mod.mist.hide_close") {
+  .tabbrowser-tab .tab-close-button {
+    display: none !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   3. Favicons: a little pop when a tab becomes active, plus an optional
+   glow in the icon's own colours
+   ════════════════════════════════════════════════════════════════════════ */
+
+.tabbrowser-tab:not([zen-glance-tab])[selected] > .tab-stack > .tab-content > .tab-icon-stack {
+  animation: mist-icon-pop var(--mist-slow) var(--mist-ease) !important;
+}
+
+/* Only a middle frame: it starts and ends at whatever scale the icon has
+   (1 normally, 1.08 while hovered), so there is never a jump. */
+@keyframes mist-icon-pop {
+  40% {
+    scale: 1.16;
+  }
+}
+
+/* CSS can't read an icon's colours, but an SVG filter can: it blurs and
+   saturates a copy of the icon and puts it behind the original. The glow
+   takes the icon's own colours, multi-colour icons included. */
+@media -moz-pref("mod.mist.favicon_glow") {
+  :root {
+    --mist-favicon-glow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g' x='-100%25' y='-100%25' width='300%25' height='300%25' color-interpolation-filters='sRGB'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='3.5' result='b'/%3E%3CfeColorMatrix in='b' type='saturate' values='1.7' result='s'/%3E%3CfeComponentTransfer in='s' result='f'%3E%3CfeFuncA type='linear' slope='0.7'/%3E%3C/feComponentTransfer%3E%3CfeMerge%3E%3CfeMergeNode in='f'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3C/svg%3E#g");
+  }
+
+  .tabbrowser-tab:not([zen-glance-tab]):is([selected], [zen-essential]:hover)
+    > .tab-stack > .tab-content > .tab-icon-stack > .tab-icon-image {
+    filter: var(--mist-favicon-glow) !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   4. Folders (Zen's tab groups)
+   ════════════════════════════════════════════════════════════════════════ */
+
+zen-folder > .tab-group-label-container::before {
+  border-radius: var(--mist-radius-md) !important;
+  transition: background-color var(--mist-fast) var(--mist-ease) !important;
+}
+
+/* An open folder sits on a faint tray, so its tabs read as one group.
+   `isolation` keeps the folder row's hover highlight above the tray.
+   The tray steps aside while you drag tabs around. */
+:root[zen-sidebar-expanded="true"] #tabbrowser-tabs:not([movingtab]) zen-folder:not([collapsed]) {
+  background-color: var(--mist-tray) !important;
+  border-radius: var(--mist-radius) !important;
+  isolation: isolate !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   5. Essentials: tiles that lift slightly on hover
+   ════════════════════════════════════════════════════════════════════════ */
+
+.tabbrowser-tab[zen-essential]:not([zen-glance-tab]) {
+  & > .tab-stack {
+    transition: translate var(--mist-base) var(--mist-spring) !important;
+  }
+  & > .tab-stack > .tab-background {
+    border-radius: var(--mist-radius) !important;
+    transition:
+      background-color var(--mist-base) var(--mist-ease),
+      box-shadow var(--mist-base) var(--mist-ease) !important;
+  }
+
+  &:hover > .tab-stack {
+    translate: 0 -1px !important;
+  }
+  &:hover > .tab-stack > .tab-background {
+    box-shadow: 0 6px 14px -8px var(--mist-shadow-deep) !important;
+  }
+
+  &:is([selected], [multiselected]) > .tab-stack > .tab-background {
+    box-shadow:
+      inset 0 0 0 1.5px var(--mist-ring),
+      -5px 6px 16px -9px var(--mist-glow-a),
+      5px 6px 16px -9px var(--mist-glow-b) !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   6. Sidebar buttons and the space name
+   ════════════════════════════════════════════════════════════════════════ */
+
+:is(#zen-sidebar-top-buttons, #zen-sidebar-foot-buttons, #nav-bar) .toolbarbutton-1 {
+  & > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+    transition:
+      background-color var(--mist-fast) var(--mist-ease),
+      scale var(--mist-base) var(--mist-spring),
+      transform 0.15s ease-in-out,
+      opacity 0.15s ease-in-out !important;
+  }
+  /* Tactile press. */
+  &:not([disabled]):hover:active > :is(.toolbarbutton-icon, .toolbarbutton-badge-stack) {
+    scale: 0.9 !important;
+  }
+}
+
+.zen-current-workspace-indicator::before {
+  transition: background-color var(--mist-fast) var(--mist-ease) !important;
+}
+
+/* Hide the space name at the top of the tab list (Zen's Library panel,
+   which reuses the same element, is left alone). */
+@media -moz-pref("mod.mist.hide_space_name") {
+  .zen-current-workspace-indicator:not(zen-library *) {
+    display: none !important;
+  }
+}
+
+/* Quiet sidebar: the bottom buttons and the "New Tab" row stay hidden
+   until the pointer is over the sidebar, keyboard focus is inside it, or
+   one of its menus is open. */
+@media -moz-pref("mod.mist.quiet_sidebar") {
+  #navigator-toolbox {
+    & #zen-sidebar-foot-buttons,
+    & #tabbrowser-arrowscrollbox-periphery > toolbarbutton {
+      transition: opacity var(--mist-base) var(--mist-ease) !important;
+    }
+
+    &:not(:hover, :focus-within, [zen-has-hover], [zen-has-implicit-hover="true"], [has-popup-menu], :has([open])) {
+      & #zen-sidebar-foot-buttons,
+      & #tabbrowser-arrowscrollbox-periphery > toolbarbutton {
+        opacity: 0 !important;
+      }
+    }
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   7. The page: a softer floating card with a hairline edge
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root:not([inDOMFullscreen="true"], [zen-no-padding="true"])
+  #tabbrowser-tabpanels
+  .browserSidebarContainer:not(.zen-glance-overlay, #zen-glance-detached) {
+  box-shadow:
+    0 0 0 1px var(--mist-hairline),
+    0 1px 3px var(--mist-shadow-soft),
+    0 16px 40px -16px var(--mist-shadow-deep) !important;
+}
+
+@media -moz-pref("mod.mist.flat_page") {
+  :root:not([inDOMFullscreen="true"], [zen-no-padding="true"])
+    #tabbrowser-tabpanels
+    .browserSidebarContainer:not(.zen-glance-overlay, #zen-glance-detached) {
+    box-shadow: 0 0 0 1px var(--mist-hairline) !important;
+  }
+}
+
+/* When you switch tabs the new page settles in with a short fade.
+   Split view and Glance overlays have their own motion, so they are
+   skipped. Kept deliberately subtle: Zen also toggles these classes in a
+   few edge cases (e.g. expanding a Glance preview), where a big fade
+   would look like a flicker. */
+#tabbrowser-tabpanels:not([zen-split-view="true"])
+  > .browserSidebarContainer.deck-selected:not(.zen-glance-overlay) {
+  animation: mist-page-in var(--mist-slow) var(--mist-ease) !important;
+}
+
+@keyframes mist-page-in {
+  from {
+    opacity: 0.65;
+    scale: 0.993;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   8. URL bar
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Opening in place: the background grows out slightly. */
+#urlbar[breakout-extend] .urlbar-background {
+  animation: mist-urlbar-grow var(--mist-base) var(--mist-ease) !important;
+  outline-color: var(--mist-ring) !important;
+}
+
+/* Floating (centred) URL bar: fades in and blooms with a spring. */
+#urlbar[breakout-extend][zen-floating-urlbar="true"] {
+  animation: mist-fade-in var(--mist-base) var(--mist-ease) !important;
+
+  & .urlbar-background {
+    animation: mist-urlbar-bloom var(--mist-slow) var(--mist-spring) !important;
+    box-shadow:
+      0 0 0 1px var(--mist-hairline),
+      0 30px 90px -20px var(--mist-shadow-deep),
+      -60px 10px 90px -50px var(--mist-glow-a),
+      60px 10px 90px -50px var(--mist-glow-b) !important;
+  }
+}
+
+/* Results slide down a few pixels just after the bar opens. */
+#urlbar[open] .urlbarView {
+  animation: mist-results-in var(--mist-base) var(--mist-ease) 40ms backwards !important;
+}
+
+:is(.urlbarView-row, .urlbarView-row-inner) {
+  border-radius: var(--mist-radius-md) !important;
+}
+.urlbarView-row {
+  transition: background-color var(--mist-fast) var(--mist-ease) !important;
+}
+
+/* Zen's page-loading pill picks up the gradient. */
+#zen-loading-progress-bar {
+  --zen-loading-progress-bar-color: var(--mist-gradient) !important;
+}
+
+@keyframes mist-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes mist-urlbar-grow {
+  from {
+    scale: 0.985;
+  }
+}
+
+@keyframes mist-urlbar-bloom {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
+@keyframes mist-results-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   9. Menus and panels: rounder items with a gentle hover fade
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --arrowpanel-menuitem-border-radius: var(--mist-radius-sm) !important;
+}
+
+menupopup {
+  --menuitem-border-radius: var(--mist-radius-sm) !important;
+}
+
+menupopup :is(menuitem, menu),
+.subviewbutton,
+.panel-banner-item {
+  transition: background-color var(--mist-fast) var(--mist-ease) !important;
+}

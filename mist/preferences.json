@@ -1,0 +1,81 @@
+[
+  {
+    "property": "mod.mist.accent",
+    "label": "Accent gradient",
+    "type": "dropdown",
+    "placeholder": "Dusk: violet to light blue (default)",
+    "options": [
+      {
+        "label": "Space: follows your space color",
+        "value": "space"
+      },
+      {
+        "label": "Aurora: mint to blue",
+        "value": "aurora"
+      },
+      {
+        "label": "Sunset: rose to amber",
+        "value": "sunset"
+      },
+      {
+        "label": "Mono: greyscale",
+        "value": "mono"
+      }
+    ]
+  },
+  {
+    "property": "mod.mist.radius",
+    "label": "Corner roundness for tabs, tiles and menus (include the unit, e.g. 12px)",
+    "type": "string",
+    "placeholder": "12px",
+    "defaultValue": "12px"
+  },
+  {
+    "property": "mod.mist.quiet_sidebar",
+    "label": "Quiet sidebar: hide the bottom buttons and New Tab row until you hover the sidebar",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.mist.hide_space_name",
+    "label": "Hide the space name at the top of the tab list",
+    "type": "checkbox",
+    "defaultValue": true
+  },
+  {
+    "property": "mod.mist.compact_tabs",
+    "label": "Compact tabs: shorter tab rows",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.mist.hide_close",
+    "label": "Hide tab close buttons (middle-click or Ctrl/Cmd+W still close tabs)",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.mist.favicon_glow",
+    "label": "Favicon glow (experimental): the active tab's icon glows in its own colors",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.mist.flat_page",
+    "label": "Flat page: remove the floating shadow around websites",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.mist.no_glow",
+    "label": "Turn off the accent glows",
+    "type": "checkbox",
+    "defaultValue": false
+  },
+  {
+    "property": "mod.mist.no_motion",
+    "label": "Turn off Mist's animations",
+    "type": "checkbox",
+    "defaultValue": false
+  }
+]
